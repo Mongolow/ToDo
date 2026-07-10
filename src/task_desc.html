@@ -4,18 +4,31 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Task Details</title>
+    <script src="./scripts.js"></script>
 </head>
 <body>
     <h1>Task Details</h1>
         <p><strong>ID:</strong> <span id="task-id"></span></p>
-        <p><strong>Tytuł:</strong> <span id="task-text"></span></p>
-        <p><strong>Opis:</strong> <span id="task-description"></span></p>
+        <p><strong>Title:</strong> <span id="task-text"></span></p>
+        <p><strong>Description:</strong> <span id="task-description"></span></p>
+        <form>
+            <label for="task-description-input">Edit Description:</label>
+            <input type="text" id="task-description-input" placeholder="Enter new description">
+            <button id="update-description">Update</button>
+        </form>
 
         <script>
             const params = new URLSearchParams(window.location.search);
             document.getElementById('task-id').textContent = params.get('taskId') || '';
             document.getElementById('task-text').textContent = params.get('taskText') || '';
             document.getElementById('task-description').textContent = params.get('taskDescription') || '';
+            document.getElementById('update-description').addEventListener('click', (event) => {
+                event.preventDefault();
+                const newDescription = document.getElementById('task-description-input').value;
+                const taskId = params.get('taskId');
+                updateTaskDescription(taskId, newDescription);
+                document.getElementById('task-description').textContent = newDescription;
+            });
         </script>
 </body>
 </html>

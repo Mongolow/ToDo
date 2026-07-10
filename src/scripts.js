@@ -85,3 +85,15 @@ function showTaskDetails(taskId) {
         window.api.showTaskDetails(task);
     }
 }
+
+function updateTaskDescription(taskId, description) {
+    const tasks = readTasksFromStorage();
+    const task = tasks.find(t => String(t.id) === String(taskId));
+
+    if (!task) {
+        throw new Error('Task not found.');
+    }
+
+    task.task_description = description;
+    writeTasksToStorage(tasks);
+}
