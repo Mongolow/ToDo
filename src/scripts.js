@@ -97,3 +97,15 @@ function updateTaskDescription(taskId, description) {
     task.task_description = description;
     writeTasksToStorage(tasks);
 }
+
+function updateTaskTitle(taskId, title) {
+    const tasks = readTasksFromStorage();
+    const task = tasks.find(t => String(t.id) === String(taskId));
+
+    if (!task) {
+        throw new Error('Task not found.');
+    }
+
+    task.text = title;
+    writeTasksToStorage(tasks);
+}

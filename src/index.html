@@ -22,6 +22,11 @@
         document.getElementById('task-input').value = '';
         showTasks();
       });
+      if (window.api && typeof window.api.onRefreshTaskList === 'function') {
+        window.api.onRefreshTaskList(() => {
+        showTasks();
+      });
+}
     </script>
   </body>
 </html>

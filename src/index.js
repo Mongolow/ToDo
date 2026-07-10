@@ -2,6 +2,7 @@ const { app, BrowserWindow, ipcMain } = require('electron');
 const path = require('node:path');
 
 let taskDetailsWindow = null;
+let mainWindow = null;
 
 // Handle creating/removing shortcuts on Windows when installing/uninstalling.
 if (require('electron-squirrel-startup')) {
@@ -10,7 +11,7 @@ if (require('electron-squirrel-startup')) {
 
 const createWindow = () => {
   // Create the browser window.
-  const mainWindow = new BrowserWindow({
+  mainWindow = new BrowserWindow({
     width: 800,
     height: 600,
     webPreferences: {
@@ -23,6 +24,7 @@ const createWindow = () => {
 
   // Open the DevTools.
   mainWindow.webContents.openDevTools();
+
 };
 
 // This function opens a new window to display task details
@@ -55,6 +57,13 @@ function openTaskDetailsWindow(task) {
 // Listen for the 'show-task-details' event from the renderer process
 ipcMain.on('show-task-details', (_event, task) => {
   openTaskDetailsWindow(task);
+});
+
+// Listen for the 'refresh-task-list' event from the renderer process
+ipcMain.on('refresh-task-list', () => {
+  if (mainWindow && !mainWindow.isDestroyed()) {
+    mainWindow.webContents.send('refresh-task-list');
+  }
 });
 
 // This method will be called when Electron has finished
