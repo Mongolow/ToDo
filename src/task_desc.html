@@ -1,0 +1,21 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Task Details</title>
+</head>
+<body>
+    <h1>Task Details</h1>
+        <p><strong>ID:</strong> <span id="task-id"></span></p>
+        <p><strong>Tytuł:</strong> <span id="task-text"></span></p>
+        <p><strong>Opis:</strong> <span id="task-description"></span></p>
+
+        <script>
+            const params = new URLSearchParams(window.location.search);
+            document.getElementById('task-id').textContent = params.get('taskId') || '';
+            document.getElementById('task-text').textContent = params.get('taskText') || '';
+            document.getElementById('task-description').textContent = params.get('taskDescription') || '';
+        </script>
+</body>
+</html>

@@ -29,6 +29,7 @@ async function saveTask(taskText) {
 		text,
 		done: false,
 		createdAt: new Date().toISOString(),
+        task_description: '',
 	};
 
 	tasks.push(task);
@@ -53,7 +54,7 @@ function showTasks() {
 
     tasks.forEach(task => {
         const listItem = document.createElement('li');
-        listItem.textContent = task.text + ' ' + (task.done ? ' (Done)' : '');
+        listItem.innerHTML = '<button class="text-button" onclick="showTaskDetails(' + task.id + ')">' + task.text + '</button>' + ' ' + (task.done ? ' (Done)' : '') + ' ' + new Date(task.createdAt).toLocaleString();
         taskList.appendChild(listItem);
         const toggleButton = document.createElement('button');
         toggleButton.textContent = task.done ? 'Mark as Undone' : 'Mark as Done';
@@ -68,4 +69,19 @@ function showTasks() {
         deleteButton.addEventListener('click', () => deleteTask(task.id));
         listItem.appendChild(deleteButton);
     });
+}
+
+// Function to show task details in a new window
+function showTaskDetails(taskId) {
+    const tasks = readTasksFromStorage();
+    const task = tasks.find(t => t.id === taskId);
+
+    if (!task) {
+        alert('Task not found.');
+        return;
+    }
+
+    if (window.api && typeof window.api.showTaskDetails === 'function') {
+        window.api.showTaskDetails(task);
+    }
 }

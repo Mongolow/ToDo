@@ -15,9 +15,13 @@
     <script src="./scripts.js"></script>
     <script>
       showTasks();
-      const button = document.getElementById("submit_task");
-      button.addEventListener("click", () => saveTask(document.getElementById("task-input").value));
-      button.addEventListener("click", showTasks);
+      const form = document.querySelector('form');
+      form.addEventListener('submit', async (event) => {
+        event.preventDefault();
+        await saveTask(document.getElementById('task-input').value);
+        document.getElementById('task-input').value = '';
+        showTasks();
+      });
     </script>
   </body>
 </html>

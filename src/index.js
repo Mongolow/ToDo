@@ -1,5 +1,7 @@
-const { app, BrowserWindow } = require('electron');
+const { app, BrowserWindow, ipcMain } = require('electron');
 const path = require('node:path');
+
+let taskDetailsWindow = null;
 
 // Handle creating/removing shortcuts on Windows when installing/uninstalling.
 if (require('electron-squirrel-startup')) {
@@ -22,6 +24,38 @@ const createWindow = () => {
   // Open the DevTools.
   mainWindow.webContents.openDevTools();
 };
+
+// This function opens a new window to display task details
+function openTaskDetailsWindow(task) {
+  if (taskDetailsWindow && !taskDetailsWindow.isDestroyed()) {
+    taskDetailsWindow.focus();
+  } else {
+    taskDetailsWindow = new BrowserWindow({
+      width: 600,
+      height: 450,
+      webPreferences: {
+        preload: path.join(__dirname, 'preload.js'),
+      },
+    });
+
+    taskDetailsWindow.on('closed', () => {
+      taskDetailsWindow = null;
+    });
+  }
+
+  taskDetailsWindow.loadFile(path.join(__dirname, 'task_desc.html'), {
+    query: {
+      taskId: String(task.id),
+      taskText: task.text,
+      taskDescription: task.task_description || '',
+    },
+  });
+}
+
+// Listen for the 'show-task-details' event from the renderer process
+ipcMain.on('show-task-details', (_event, task) => {
+  openTaskDetailsWindow(task);
+});
 
 // This method will be called when Electron has finished
 // initialization and is ready to create browser windows.
