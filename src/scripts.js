@@ -49,14 +49,16 @@ function deleteTask(taskId) {
 
 function showTasks() {
     const tasks = readTasksFromStorage();
-    const taskList = document.querySelector('ul');
+    const taskList = document.getElementById('task-list');
     taskList.innerHTML = '';
 
     tasks.forEach(task => {
         const listItem = document.createElement('li');
-        listItem.innerHTML = '<button class="text-button" onclick="showTaskDetails(' + task.id + ')">' + task.text + '</button>' + ' ' + (task.done ? ' (Done)' : '');
+        listItem.className = 'list-group-item d-flex flex-wrap align-items-center gap-2';
+        listItem.innerHTML = '<button class="text-button me-auto" onclick="showTaskDetails(' + task.id + ')">' + task.text + '</button>' + (task.done ? '<span class="badge text-bg-success">Done</span>' : '<span class="badge text-bg-secondary">Pending</span>');
         taskList.appendChild(listItem);
         const toggleButton = document.createElement('button');
+        toggleButton.className = 'btn btn-sm btn-outline-primary';
         toggleButton.textContent = task.done ? 'Mark as Undone' : 'Mark as Done';
         toggleButton.addEventListener('click', () => {
             task.done = !task.done;
@@ -65,6 +67,7 @@ function showTasks() {
         });
         listItem.appendChild(toggleButton);
         const deleteButton = document.createElement('button');
+        deleteButton.className = 'btn btn-sm btn-outline-danger';
         deleteButton.textContent = 'Delete';
         deleteButton.addEventListener('click', () => deleteTask(task.id));
         listItem.appendChild(deleteButton);
