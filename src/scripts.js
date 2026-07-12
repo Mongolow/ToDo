@@ -54,7 +54,7 @@ function showTasks() {
 
     tasks.forEach(task => {
         const listItem = document.createElement('li');
-        listItem.innerHTML = '<button class="text-button" onclick="showTaskDetails(' + task.id + ')">' + task.text + '</button>' + ' ' + (task.done ? ' (Done)' : '') + ' ' + new Date(task.createdAt).toLocaleString();
+        listItem.innerHTML = '<button class="text-button" onclick="showTaskDetails(' + task.id + ')">' + task.text + '</button>' + ' ' + (task.done ? ' (Done)' : '');
         taskList.appendChild(listItem);
         const toggleButton = document.createElement('button');
         toggleButton.textContent = task.done ? 'Mark as Undone' : 'Mark as Done';

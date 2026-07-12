@@ -50,6 +50,8 @@ function openTaskDetailsWindow(task) {
       taskId: String(task.id),
       taskText: task.text,
       taskDescription: task.task_description || '',
+      taskDone: task.done,
+      taskCreatedAt: task.createdAt,
     },
   });
 }

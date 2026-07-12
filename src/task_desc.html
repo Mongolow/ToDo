@@ -20,12 +20,20 @@
             <label for="task-description-input">Edit Description:</label>
             <input type="text" id="task-description-input" placeholder="Enter new description">
             <button id="update-description">Update</button>
+        <p><strong>Done?:</strong> <span id="task-done"></span></p>
+        <p><strong>Created at:</strong> <span id="task-created-at"></span></p>
         </form>
 
         <script>
             const params = new URLSearchParams(window.location.search);
             document.getElementById('task-id').textContent = params.get('taskId') || '';
             document.getElementById('task-text').textContent = params.get('taskText') || '';
+            if (params.get('taskDone') === 'true') {
+                document.getElementById('task-done').textContent = 'yes';
+            } else {
+                document.getElementById('task-done').textContent = 'no';
+            };
+            document.getElementById('task-created-at').textContent = new Date(params.get('taskCreatedAt')).toLocaleString();
             document.getElementById('update-title').addEventListener('click', (event) => {
                 event.preventDefault();
                 const newTitle = document.getElementById('task-title-input').value;
