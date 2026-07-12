@@ -109,3 +109,72 @@ function updateTaskTitle(taskId, title) {
     task.text = title;
     writeTasksToStorage(tasks);
 }
+
+function normalizeTasksFromImport(data) {
+    const rawTasks = Array.isArray(data) ? data : data?.tasks;
+    if (!Array.isArray(rawTasks)) {
+        throw new Error('Invalid JSON schema. Expected an array or object with tasks array.');
+    }
+
+    return rawTasks
+        .filter(task => task && typeof task.text === 'string' && task.text.trim())
+        .map((task, index) => ({
+            id: typeof task.id === 'number' ? task.id : Date.now() + index,
+            text: task.text.trim(),
+            done: Boolean(task.done),
+            createdAt: task.createdAt || new Date().toISOString(),
+            task_description: typeof task.task_description === 'string' ? task.task_description : '',
+        }));
+}
+
+async function exportTasks() {
+    const tasks = readTasksFromStorage();
+    const payload = {
+        version: 1,
+        exportedAt: new Date().toISOString(),
+        tasks,
+    };
+
+    try {
+        if (window.api && typeof window.api.exportTasksToFile === 'function') {
+            const result = await window.api.exportTasksToFile(payload);
+            if (!result?.canceled) {
+                alert('Tasks exported successfully!');
+            }
+            return;
+        }
+
+        // Browser fallback for non-Electron environments.
+        const link = document.createElement('a');
+        const blob = new Blob([JSON.stringify(payload, null, 2)], { type: 'application/json' });
+        link.href = URL.createObjectURL(blob);
+        link.download = 'tasks.json';
+        link.click();
+        URL.revokeObjectURL(link.href);
+    } catch (err) {
+        console.error('Error exporting tasks:', err);
+        alert('Failed to export tasks.');
+    }
+}
+
+async function importTasks() {
+    try {
+        if (!(window.api && typeof window.api.importTasksFromFile === 'function')) {
+            alert('Import is available only in Electron app mode.');
+            return;
+        }
+
+        const result = await window.api.importTasksFromFile();
+        if (result?.canceled) {
+            return;
+        }
+
+        const importedTasks = normalizeTasksFromImport(result?.data);
+        writeTasksToStorage(importedTasks);
+        showTasks();
+        alert('Tasks imported successfully!');
+    } catch (err) {
+        console.error('Error importing tasks:', err);
+        alert('Failed to import tasks. Please check the file format.');
+    }
+}

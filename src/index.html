@@ -10,6 +10,8 @@
     <form>
       <input type="text" id="task-input" placeholder="Add a new task" />
       <button id="submit_task" type="submit">Add</button>
+      <button id="export_tasks" type="button" onclick="exportTasks()">Export</button>
+      <button id="import_tasks" type="button" onclick="importTasks()">Import</button>
     </form>
     <ul></ul>  
     <script src="./scripts.js"></script>
@@ -26,7 +28,8 @@
         window.api.onRefreshTaskList(() => {
         showTasks();
       });
-}
+      }
+
     </script>
   </body>
 </html>

@@ -1,5 +1,6 @@
-const { app, BrowserWindow, ipcMain } = require('electron');
+const { app, BrowserWindow, ipcMain, dialog } = require('electron');
 const path = require('node:path');
+const fs = require('node:fs');
 
 let taskDetailsWindow = null;
 let mainWindow = null;
@@ -66,6 +67,43 @@ ipcMain.on('refresh-task-list', () => {
   if (mainWindow && !mainWindow.isDestroyed()) {
     mainWindow.webContents.send('refresh-task-list');
   }
+});
+
+ipcMain.handle('export-tasks', async (_event, payload) => {
+  const result = await dialog.showSaveDialog({
+    title: 'Export Tasks',
+    defaultPath: 'tasks.json',
+    filters: [{ name: 'JSON Files', extensions: ['json'] }],
+  });
+
+  if (result.canceled || !result.filePath) {
+    return { canceled: true };
+  }
+
+  fs.writeFileSync(result.filePath, JSON.stringify(payload, null, 2), 'utf-8');
+  return { canceled: false, filePath: result.filePath };
+});
+
+ipcMain.handle('import-tasks', async () => {
+  const result = await dialog.showOpenDialog({
+    title: 'Import Tasks',
+    filters: [{ name: 'JSON Files', extensions: ['json'] }],
+    properties: ['openFile'],
+  });
+
+  if (result.canceled || !result.filePaths.length) {
+    return { canceled: true };
+  }
+
+  const filePath = result.filePaths[0];
+  const content = fs.readFileSync(filePath, 'utf-8');
+  const parsed = JSON.parse(content);
+
+  return {
+    canceled: false,
+    filePath,
+    data: parsed,
+  };
 });
 
 // This method will be called when Electron has finished
