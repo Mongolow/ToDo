@@ -11,26 +11,13 @@
 <body>
     <main class="container py-4">
         <div class="mx-auto todo-wrap">
-    <h1>Task Details</h1>
-        <p><strong>ID:</strong> <span id="task-id"></span></p>
-        <p><strong>Title:</strong> <span id="task-text"></span></p>
-        <br>
-        <div class="accordion" id="task-details-accordion">
-            <div class="accordion-item">
-                <h2 class="accordion-header" id="heading-description">
-                    <button class="accordion-button" type="button" data-bs-toggle="collapse" data-bs-target="#collapse-description" aria-expanded="true" aria-controls="collapse-description">
-                        Description
-                    </button>
-                </h2>
-                <div id="collapse-description" class="accordion-collapse collapse show" aria-labelledby="heading-description" data-bs-parent="#task-details-accordion">
-                    <div class="accordion-body">
-                        <p id="task-description"></p>
-                    </div>
-                </div>
-            </div>
-        <br>
-        <p><strong>Done?:</strong> <span id="task-done"></span></p>
-        <p><strong>Created at:</strong> <span id="task-created-at"></span></p>
+            <ul class="list-group list-group-flush">
+                <li class="list-group-item"><strong>ID:</strong> <span id="task-id"></span></li>
+                <li class="list-group-item"><strong>Title:</strong> <span id="task-text"></span></li>
+                <li class="list-group-item"><strong>Description:</strong> <span id="task-description"></span></li>
+                <li class="list-group-item"><strong>Done?:</strong> <span id="task-done"></span></li>
+                <li class="list-group-item"><strong>Created at:</strong> <span id="task-created-at"></span></li>
+            </ul>
         </div>
         <br>
         <br>
